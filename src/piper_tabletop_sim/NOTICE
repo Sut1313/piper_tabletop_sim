@@ -1,0 +1,34 @@
+piper_tabletop_sim
+==================
+
+This package contains code, URDF/xacro, Gazebo world files and meshes derived
+from the following sources. The original copyright and license notices remain
+in effect for the derived portions.
+
+1. AgileX PiPER arm and gripper
+   - Official model: agx_arm_urdf/piper (AgileX Robotics).
+   - Link masses, inertias, joint origins and limits, and gripper finger meshes
+     are the official PiPER values.
+   - The arm macro and mesh set were also transcribed in
+     ag_robot_description (MIT), which was used as the local reference.
+
+2. ag_robot_description
+   - Source project: ag_robot_description.
+   - License: MIT.
+   - Used for: PiPER arm macro structure, D435i body pose and intrinsics,
+     camera/optical frame layout, Gazebo sensor and ros2_control patterns.
+   - The camera pitch override (default 60 deg down) is a tabletop-demo
+     addition, not part of the original vehicle model.
+
+3. piper_lightweight_sim
+   - Source project: piper_lightweight_sim.
+   - License: Apache-2.0.
+   - Used as the Gazebo Harmonic scene/launch skeleton, table layout and
+     single-arm + D435i composition.
+
+4. Intel RealSense D435i
+   - The D435i mesh and reference intrinsics are from the librealsense /
+     RealSense reference device data, as transcribed in ag_robot_description.
+
+Unless otherwise noted, the new files in this package are licensed under the
+Apache License, Version 2.0.

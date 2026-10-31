@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    AgileX PiPER arm with the official 70 mm parallel gripper.
+
+    Source of physical values:
+      - link masses, inertias, joint origins and limits are the official
+        AgileX piper_description values (same numbers used by
+        ag_robot_description/urdf/piper_arm.xacro and agx_arm_urdf/piper).
+      - gripper: official small gripper, 0..70 mm total opening:
+          gripper 0..0.07 m (virtual total-opening master),
+          joint7 0..0.035 m (mimic gripper * +0.5),
+          joint8 -0.035..0 m (mimic gripper * -0.5).
+        The finger meshes are the official PiPER gripper finger meshes; the
+        same files are used by the 100 mm large-gripper model, only the stroke
+        differs.
+      - TCP is link6 + 0.1358 m along link6 +Z (the real project uses the same
+        constant in grasp_precheck.py / grasp_execute.py).
+
+    The macro intentionally has no <ros2_control> or <gazebo> blocks; those are
+    added by the Gazebo wrapper so the same arm can also be loaded by MoveIt.
+  -->
+
+  <xacro:macro name="piper_arm" params="prefix parent *origin">
+
+    <link name="${prefix}base_link">
+      <inertial>
+        <origin xyz="-0.00473641164191482 2.56829134630247E-05 0.041451518036016" rpy="0 0 0"/>
+        <mass value="1.02"/>
+        <inertia ixx="0.00267433" ixy="-0.00000073" ixz="-0.00017389"
+                 iyy="0.00282612" iyz="0.0000004" izz="0.00089624"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_base_link.dae"/></geometry>
+        <material name="alu"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_base_link.stl"/></geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}link1">
+      <inertial>
+        <origin xyz="0.00032 -0.00041 -0.00348" rpy="0 0 0"/>
+        <mass value="0.71"/>
+        <inertia ixx="0.00050027" ixy="0.00000078" ixz="0.00000626"
+                 iyy="0.00040879" iyz="0.00000462" izz="0.00045802"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link1.dae"/></geometry>
+        <material name="alu"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link1.stl"/></geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}link2">
+      <inertial>
+        <origin xyz="0.21852 -0.00861 0.00126" rpy="0 0 0"/>
+        <mass value="1.16"/>
+        <inertia ixx="0.00111915" ixy="0.00182916" ixz="0.00019233"
+                 iyy="0.06763251" iyz="0.00000767" izz="0.067559"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link2.dae"/></geometry>
+        <material name="alu"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link2.stl"/></geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}link3">
+      <inertial>
+        <origin xyz="-0.01999 -0.14808 -0.00053" rpy="0 0 0"/>
+        <mass value="0.5"/>
+        <inertia ixx="0.01347608" ixy="0.00161034" ixz="0.00000066"
+                 iyy="0.00046377" iyz="0.00000162" izz="0.01363321"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link3.dae"/></geometry>
+        <material name="alu"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link3.stl"/></geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}link4">
+      <inertial>
+        <origin xyz="0.00013 -0.00076 -0.00394" rpy="0 0 0"/>
+        <mass value="0.38"/>
+        <inertia ixx="0.00017844" ixy="0.00000062" ixz="0.00000067"
+                 iyy="0.00018914" iyz="0.00000408" izz="0.00014613"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link4.dae"/></geometry>
+        <material name="alu"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link4.stl"/></geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}link5">
+      <inertial>
+        <origin xyz="0.00018 -0.06104 -0.00227" rpy="0 0 0"/>
+        <mass value="0.383"/>
+        <inertia ixx="0.00172318" ixy="0.00000259" ixz="0.00000010"
+                 iyy="0.00017936" iyz="0.00000990" izz="0.00171172"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link5.dae"/></geometry>
+        <material name="alu"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link5.stl"/></geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}link6">
+      <inertial>
+        <origin xyz="-0.00003 0.00006 -0.002" rpy="0 0 0"/>
+        <mass value="0.007"/>
+        <inertia ixx="0.00152112" ixy="0.00000202" ixz="0.00000261"
+                 iyy="0.00138626" iyz="0.00000002" izz="0.00031152"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link6.dae"/></geometry>
+        <material name="alu"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_link6.stl"/></geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}mount_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}base_link"/>
+      <xacro:insert_block name="origin"/>
+    </joint>
+
+    <joint name="${prefix}joint1" type="revolute">
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}link1"/>
+      <origin xyz="0 0 0.123" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-2.6179938" upper="2.6179938" effort="100" velocity="5"/>
+      <dynamics damping="0.3" friction="0.1"/>
+    </joint>
+
+    <joint name="${prefix}joint2" type="revolute">
+      <parent link="${prefix}link1"/>
+      <child link="${prefix}link2"/>
+      <origin xyz="0 0 0" rpy="1.5707963 -0.1357866 -3.1415926"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="0" upper="3.1415926" effort="100" velocity="5"/>
+      <dynamics damping="0.3" friction="0.1"/>
+    </joint>
+
+    <joint name="${prefix}joint3" type="revolute">
+      <parent link="${prefix}link2"/>
+      <child link="${prefix}link3"/>
+      <origin xyz="0.28503 0 0" rpy="0 0 -1.7938494"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-2.9670597" upper="0" effort="100" velocity="5"/>
+      <dynamics damping="0.3" friction="0.1"/>
+    </joint>
+
+    <joint name="${prefix}joint4" type="revolute">
+      <parent link="${prefix}link3"/>
+      <child link="${prefix}link4"/>
+      <origin xyz="-0.02198 -0.25075 0" rpy="1.5707963 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-1.7453292" upper="1.7453292" effort="100" velocity="5"/>
+      <dynamics damping="0.3" friction="0.1"/>
+    </joint>
+
+    <joint name="${prefix}joint5" type="revolute">
+      <parent link="${prefix}link4"/>
+      <child link="${prefix}link5"/>
+      <origin xyz="0 0 0" rpy="-1.5707963 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-1.2217304" upper="1.2217304" effort="100" velocity="5"/>
+      <dynamics damping="0.3" friction="0.1"/>
+    </joint>
+
+    <joint name="${prefix}joint6" type="revolute">
+      <parent link="${prefix}link5"/>
+      <child link="${prefix}link6"/>
+      <origin xyz="8.8259E-05 -0.091 0" rpy="1.5707963 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-2.0943951" upper="2.0943951" effort="100" velocity="5"/>
+      <dynamics damping="0.3" friction="0.1"/>
+    </joint>
+
+    <!-- Official small gripper: 70 mm total opening. -->
+    <link name="${prefix}gripper_base">
+      <inertial>
+        <origin xyz="-0.000183807162235591 8.05033155577911E-05 0.0321436689908876" rpy="0 0 0"/>
+        <mass value="0.45"/>
+        <inertia ixx="0.00092934" ixy="0.00000034" ixz="-0.00000738"
+                 iyy="0.00071447" iyz="0.00000005" izz="0.00039442"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_gripper_base.dae"/></geometry>
+        <material name="dark"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_gripper_base.stl"/></geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint6_to_gripper_base" type="fixed">
+      <parent link="${prefix}link6"/>
+      <child link="${prefix}gripper_base"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Gazebo mimic needs a driven master joint. The official 70 mm gripper
+         is modeled as a virtual total-opening joint plus two finger joints.
+         gripper: 0..0.07 m total opening (commanded)
+         joint7:  0..0.035 m, mimic gripper * +0.5
+         joint8: -0.035..0 m, mimic gripper * -0.5
+         The virtual link needs a tiny inertial or sdformat removes the joint. -->
+    <link name="${prefix}gripper_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.001"/>
+        <inertia ixx="1e-8" ixy="0" ixz="0" iyy="1e-8" iyz="0" izz="1e-8"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}gripper" type="prismatic">
+      <parent link="${prefix}gripper_base"/>
+      <child link="${prefix}gripper_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="0" upper="0.07" effort="10" velocity="1"/>
+    </joint>
+
+    <link name="${prefix}link7">
+      <inertial>
+        <origin xyz="0.00065123185041968 -0.0491929869131989 0.00972258769184025" rpy="0 0 0"/>
+        <mass value="0.025"/>
+        <inertia ixx="0.00007371" ixy="-0.00000113" ixz="0.00000021"
+                 iyy="0.00000781" iyz="-0.00001372" izz="0.0000747"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_gripper_link1.dae"/></geometry>
+        <material name="dark"/>
+      </visual>
+      <collision>
+        <!-- A simple contact pad avoids unstable triangle-mesh contact at
+             the inner finger surface. The official visual mesh is intact. -->
+        <origin xyz="0 -0.02 0.006" rpy="0 0 0"/>
+        <geometry><box size="0.02 0.04 0.012"/></geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint7" type="prismatic">
+      <parent link="${prefix}gripper_base"/>
+      <child link="${prefix}link7"/>
+      <origin xyz="0 0 0.1358" rpy="1.5708 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="0" upper="0.035" effort="10" velocity="1"/>
+      <mimic joint="${prefix}gripper" multiplier="0.5" offset="0"/>
+      <dynamics damping="0.05" friction="0.01"/>
+    </joint>
+
+    <link name="${prefix}link8">
+      <inertial>
+        <origin xyz="0.000651231850419722 -0.0491929869131991 0.00972258769184024" rpy="0 0 0"/>
+        <mass value="0.025"/>
+        <inertia ixx="0.00007371" ixy="-0.00000113" ixz="0.00000021"
+                 iyy="0.00000781" iyz="-0.00001372" izz="0.0000747"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://piper_tabletop_sim/meshes/piper_gripper_link2.dae"/></geometry>
+        <material name="dark"/>
+      </visual>
+      <collision>
+        <origin xyz="0 -0.02 0.006" rpy="0 0 0"/>
+        <geometry><box size="0.02 0.04 0.012"/></geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint8" type="prismatic">
+      <parent link="${prefix}gripper_base"/>
+      <child link="${prefix}link8"/>
+      <origin xyz="0 0 0.1358" rpy="1.5708 0 -3.1416"/>
+      <axis xyz="0 0 -1"/>
+      <limit lower="-0.035" upper="0" effort="10" velocity="1"/>
+      <mimic joint="${prefix}gripper" multiplier="-0.5" offset="0"/>
+      <dynamics damping="0.05" friction="0.01"/>
+    </joint>
+
+  </xacro:macro>
+</robot>

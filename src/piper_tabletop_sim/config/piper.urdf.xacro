@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot name="piper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- MoveIt-only arm + gripper. Match the fixed world->base_link transform
+       in piper_tabletop.urdf.xacro so planning and Gazebo use the same frame. -->
+  <xacro:include filename="$(find piper_tabletop_sim)/urdf/piper_arm_official.xacro"/>
+
+  <material name="alu"><color rgba="0.78 0.79 0.81 1.0"/></material>
+  <material name="dark"><color rgba="0.22 0.22 0.24 1.0"/></material>
+  <material name="accent"><color rgba="0.13 0.42 0.85 1.0"/></material>
+
+  <link name="world"/>
+
+  <xacro:piper_arm prefix="" parent="world">
+    <origin xyz="0.249047 0.187732 0.5504858" rpy="0 0 0"/>
+  </xacro:piper_arm>
+
+</robot>

@@ -1,0 +1,63 @@
+# Gazebo Harmonic + gz_ros2_control controllers for one PiPER arm + 70 mm gripper.
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_partial_joints_goal: false
+    open_loop_control: false
+    constraints:
+      stopped_velocity_tolerance: 0.05
+      goal_time: 1.0
+      # Gazebo position control can briefly trail the reference while the
+      # arm accelerates. Keep the goal tolerance tight, but allow transient
+      # tracking error so the controller does not abort a valid trajectory.
+      joint1: {trajectory: 0.35, goal: 0.05}
+      joint2: {trajectory: 0.35, goal: 0.05}
+      joint3: {trajectory: 0.35, goal: 0.05}
+      joint4: {trajectory: 0.35, goal: 0.05}
+      joint5: {trajectory: 0.35, goal: 0.05}
+      joint6: {trajectory: 0.35, goal: 0.05}
+
+# Official small gripper: `gripper` is the virtual total-opening joint
+# (0..0.07 m). joint7/joint8 are mimic finger joints driven by `gripper`.
+gripper_controller:
+  ros__parameters:
+    joints:
+      - gripper
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_partial_joints_goal: false
+    open_loop_control: false
+    constraints:
+      stopped_velocity_tolerance: 0.01
+      goal_time: 1.0
+      # The mimic fingers lag the virtual master at the start/end of a
+      # full-stroke command. The goal tolerance still requires the master to
+      # reach its target.
+      gripper: {trajectory: 0.05, goal: 0.01}

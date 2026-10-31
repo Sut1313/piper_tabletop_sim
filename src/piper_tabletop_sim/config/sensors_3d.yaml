@@ -1,0 +1,5 @@
+# No octomap / 3D sensor updater in this scene.
+# The RGB-D camera is published on ROS topics for the perception stack, but
+# move_group does not consume it. Keeping this list empty avoids move_group
+# trying to connect to non-existent depth topics.
+sensors: []

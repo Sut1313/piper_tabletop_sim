@@ -1,0 +1,19 @@
+# Simulated eye-to-hand calibration for piper_tabletop_sim.
+# Simulation eye-to-hand used by grasp_transform; values match the Gazebo
+# base_link/camera_color_optical_frame TF after the 20 cm arm-base raise.
+# Generated 2026-10-25 for the real_piper_yolo_graspnet executor.
+R_cam2base:
+  - [0.0, -0.8660254, 0.5]
+  - [-1.0, 0.0, 0.0]
+  - [0.0, -0.5, -0.8660254]
+t_cam2base: [-0.037, -0.181, 0.6595]
+T_cam2base:
+  - [0.0, -0.8660254, 0.5, -0.037]
+  - [-1.0, 0.0, 0.0, -0.181]
+  - [0.0, -0.5, -0.8660254, 0.6595]
+  - [0.0, 0.0, 0.0, 1.0]
+parent_frame: base_link
+child_frame: camera_color_optical_frame
+description: >
+  Simulation-only hand-eye transform. The D435i optical frame is fixed
+  relative to base_link; values match the Gazebo robot_state_publisher TF.

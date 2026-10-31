@@ -1,0 +1,28 @@
+# colcon output and local runtime state
+/build/
+/install/
+/log/
+/runs/
+/datasets/
+/tools/
+/sim_support/piper_sdk/
+
+# Training weights and local checkpoints. Keep only the runtime ONNX model.
+/models/*
+!/models/wood_block_yolov8s_seg.onnx
+*.pt
+*.pth
+*.tar
+
+# Python/editor artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+.vscode/
+.idea/
+*.swp
+*.tmp
+*.bak
+*~
